@@ -3,6 +3,7 @@ package cmd
 import (
 	"expenseTracker/global_router"
 	"expenseTracker/handler"
+	"expenseTracker/middleware"
 	"fmt"
 	"net/http"
 )
@@ -10,7 +11,9 @@ import (
 func Serve() {
 	mux := http.NewServeMux()
 
-	mux.Handle("GET /products", http.HandlerFunc(handler.GetProducts))
+	// mux.Handle("GET route", middleware.Logger(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})))
+
+	mux.Handle("GET /products", middleware.Logger(http.HandlerFunc(handler.GetProducts)))
 	mux.Handle("GET /products/{id}", http.HandlerFunc(handler.GetProductByID))
 	mux.Handle("POST /products", http.HandlerFunc(handler.CreateProduct))
 
