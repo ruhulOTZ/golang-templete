@@ -10,27 +10,24 @@ import (
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	utils.SendData(w, database.ProductList, http.StatusOK)
+	utils.SendData(w, database.GetProducts(), http.StatusOK)
 }
 
 func GetProductByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
+	product := database.GetProductByID(id)
 
 	if err != nil {
 		utils.SendData(w, "Invalid id", http.StatusBadRequest)
 		return
 	}
 
-	for _, product := range database.ProductList {
-		fmt.Println(product.ID == id)
-		if product.ID == id {
-			fmt.Println(id)
-			utils.SendData(w, product, http.StatusOK)
-			return
-		}
+	if product == nil {
+		utils.SendError(w, http.StatusNotFound, "Product not found")
+		return
 	}
 
-	utils.SendData(w, "Product not found", http.StatusNotFound)
+	utils.SendData(w, product, http.StatusOK)
 }
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
@@ -44,8 +41,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newProduct.ID = len(database.ProductList) + 1
-	database.ProductList = append(database.ProductList, newProduct)
+	response := database.AddProduct(&newProduct)
 
-	utils.SendData(w, newProduct, 201)
+	utils.SendData(w, response, 201)
 }

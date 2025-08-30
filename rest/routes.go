@@ -1,8 +1,8 @@
-package cmd
+package rest
 
 import (
-	"expenseTracker/handler"
-	"expenseTracker/middleware"
+	"expenseTracker/rest/handler"
+	"expenseTracker/rest/middleware"
 	"net/http"
 )
 
@@ -11,6 +11,7 @@ func initRoutes(mux *http.ServeMux, manager *middleware.Manager) {
 
 	// mux.Handle("GET /products", middleware.Logger(http.HandlerFunc(handler.GetProducts)))
 	mux.Handle("GET /products/{id}", http.HandlerFunc(handler.GetProductByID))
-	mux.Handle("POST /products", http.HandlerFunc(handler.CreateProduct))
+
+	mux.Handle("POST /products", manager.With(http.HandlerFunc(handler.CreateProduct), middleware.Auth))
 
 }

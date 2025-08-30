@@ -1,12 +1,16 @@
-package cmd
+package rest
 
 import (
-	"expenseTracker/middleware"
+	"expenseTracker/config"
+	"expenseTracker/rest/middleware"
 	"fmt"
 	"net/http"
+	"os"
 )
 
-func Serve() {
+func Start(cnf config.Config) {
+	port := fmt.Sprintf(":%d", cnf.HttpPort)
+
 	manager := middleware.NewManager()
 	manager.Use(
 		middleware.Preflight,
@@ -19,9 +23,10 @@ func Serve() {
 
 	initRoutes(mux, manager)
 
-	fmt.Println("Server running on :4000")
-	err := http.ListenAndServe(":4000", wrapperMux)
+	fmt.Println("Server running on " + port)
+	err := http.ListenAndServe(port, wrapperMux)
 	if err != nil {
 		fmt.Println("Error starting the server:", err)
+		os.Exit(1)
 	}
 }
