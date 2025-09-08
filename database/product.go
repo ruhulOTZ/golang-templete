@@ -1,6 +1,6 @@
 package database
 
-var ProductList []Product
+var productList []Product
 
 type Product struct {
 	ID          int     `json:"id"`
@@ -10,8 +10,29 @@ type Product struct {
 	ImgUrl      string  `json:"imgUrl"`
 }
 
+func GetProducts() []Product {
+	return productList
+}
+
+func GetProductByID(id int) *Product {
+	for _, product := range productList {
+		if product.ID == id {
+			return &product
+		}
+	}
+
+	return nil
+}
+
+func AddProduct(p *Product) *Product {
+	p.ID = len(productList) + 1
+	productList = append(productList, *p)
+
+	return p
+}
+
 func init() {
-	ProductList = []Product{
+	productList = []Product{
 		{
 			ID:          1,
 			Title:       "Apple MacBook Air",
