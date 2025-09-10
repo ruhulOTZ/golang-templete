@@ -23,7 +23,7 @@ func GetProductByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if product == nil {
-		utils.SendError(w, http.StatusNotFound, "Product not found")
+		utils.SendError(w, "Product not found", http.StatusNotFound)
 		return
 	}
 

@@ -10,6 +10,13 @@ type Product struct {
 	ImgUrl      string  `json:"imgUrl"`
 }
 
+func AddProduct(p *Product) *Product {
+	p.ID = len(productList) + 1
+	productList = append(productList, *p)
+
+	return p
+}
+
 func GetProducts() []Product {
 	return productList
 }
@@ -24,12 +31,7 @@ func GetProductByID(id int) *Product {
 	return nil
 }
 
-func AddProduct(p *Product) *Product {
-	p.ID = len(productList) + 1
-	productList = append(productList, *p)
 
-	return p
-}
 
 func init() {
 	productList = []Product{
