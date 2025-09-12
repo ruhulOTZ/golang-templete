@@ -13,8 +13,9 @@ type Header struct {
 }
 
 type Payload struct {
-	Sub         string `json:"sub"` // Subject (user ID)
-	Name        string `json:"name"`
+	Sub         int    `json:"sub"` // Subject (user ID)
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
 	Email       string `json:"email"`
 	IsShopOwner bool   `json:"isShopOwner"`
 }

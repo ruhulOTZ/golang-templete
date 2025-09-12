@@ -14,6 +14,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetProductByID(w http.ResponseWriter, r *http.Request) {
+
 	id, err := strconv.Atoi(r.PathValue("id"))
 	product := database.GetProductByID(id)
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"expenseTracker/config"
 	"expenseTracker/database"
 	"expenseTracker/utils"
 	"fmt"
@@ -11,7 +12,6 @@ import (
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	utils.SendData(w, database.GetUsers(), http.StatusOK)
 }
-
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var newUser database.User
@@ -48,9 +48,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	user := database.FindUser(ReqLogin.Email, ReqLogin.Password)
 
 	if user == nil {
-		utils.SendError(w, "Invalid email or password",  http.StatusUnauthorized)
+		utils.SendError(w, "Invalid email or password", http.StatusUnauthorized)
 		return
 	}
 
-	utils.SendData(w, user, http.StatusOK)
+	cnf := config.GetConfig()
+
+	accessToken, err := utils.CreateJWT(cnf.JwtSecretKey, utils.Payload{
+		Sub:       user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
+	})
+
+	if err != nil {
+		utils.SendError(w, "Could not create token", http.StatusInternalServerError)
+		return
+	}
+
+	utils.SendData(w, accessToken, http.StatusOK)
 }
