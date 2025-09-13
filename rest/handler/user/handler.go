@@ -1,4 +1,4 @@
-package handler
+package user
 
 import (
 	"encoding/json"
@@ -9,11 +9,18 @@ import (
 	"net/http"
 )
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {
+type Handler struct {
+}
+
+func NewHandler() *Handler {
+	return &Handler{}
+}
+
+func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	utils.SendData(w, database.GetUsers(), http.StatusOK)
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var newUser database.User
 
 	decoder := json.NewDecoder(r.Body)
@@ -34,7 +41,7 @@ type ReqLogin struct {
 	Password string `json:"password"`
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var ReqLogin = &ReqLogin{}
 
 	decoder := json.NewDecoder(r.Body)

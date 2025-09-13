@@ -1,4 +1,4 @@
-package handler
+package product
 
 import (
 	"encoding/json"
@@ -9,11 +9,18 @@ import (
 	"strconv"
 )
 
-func GetProducts(w http.ResponseWriter, r *http.Request) {
+type Handler struct {
+}
+
+func NewHandler() *Handler {
+	return &Handler{}
+}
+
+func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	utils.SendData(w, database.GetProducts(), http.StatusOK)
 }
 
-func GetProductByID(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetProductByID(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(r.PathValue("id"))
 	product := database.GetProductByID(id)
@@ -31,7 +38,7 @@ func GetProductByID(w http.ResponseWriter, r *http.Request) {
 	utils.SendData(w, product, http.StatusOK)
 }
 
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	var newProduct database.Product
 
 	decoder := json.NewDecoder(r.Body)
