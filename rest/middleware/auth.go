@@ -4,12 +4,11 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"expenseTracker/config"
 	"net/http"
 	"strings"
 )
 
-func Auth(next http.Handler) http.Handler {
+func (m *Middlewares) Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		bearerToken := r.Header.Get("Authorization")
 
@@ -38,7 +37,7 @@ func Auth(next http.Handler) http.Handler {
 		jwtSignature := tokenParts[2]
 
 		message := jwtHeader + "." + jwtPayload
-		byteArraySecret := []byte(config.GetConfig().JwtSecretKey)
+		byteArraySecret := []byte(m.cnf.JwtSecretKey)
 		byteArrayMessage := []byte(message)
 
 		h := hmac.New(sha256.New, byteArraySecret)

@@ -11,22 +11,25 @@ import (
 )
 
 type Server struct {
+	cnf            *config.Config
 	productHandler *product.Handler
 	userHandler    *user.Handler
 }
 
 func NewServer(
+	cnf *config.Config,
 	productHandler *product.Handler,
 	userHandler *user.Handler,
 ) *Server {
 	return &Server{
+		cnf:            cnf,
 		productHandler: productHandler,
 		userHandler:    userHandler,
 	}
 }
 
-func (server *Server) Start(cnf config.Config) {
-	port := fmt.Sprintf(":%d", cnf.HttpPort)
+func (server *Server) Start() {
+	port := fmt.Sprintf(":%d", server.cnf.HttpPort)
 
 	manager := middleware.NewManager()
 	manager.Use(

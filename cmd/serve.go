@@ -5,13 +5,20 @@ import (
 	"expenseTracker/rest"
 	"expenseTracker/rest/handler/product"
 	"expenseTracker/rest/handler/user"
+	"expenseTracker/rest/middleware"
 )
 
 func Serve() {
 	cnf := config.GetConfig()
 
-	productHandler := product.NewHandler()
-	userHandler := user.NewHandler()
+	middlewares := middleware.NewMiddlewares(cnf)
 
-	rest.NewServer(productHandler, userHandler).Start(cnf) // start the server
+	productHandler := product.NewHandler(middlewares)
+	userHandler := user.NewHandler(middlewares)
+
+	rest.NewServer(
+		cnf,
+		productHandler,
+		userHandler,
+	).Start() // start the server
 }

@@ -3,6 +3,7 @@ package product
 import (
 	"encoding/json"
 	"expenseTracker/database"
+	"expenseTracker/rest/middleware"
 	"expenseTracker/utils"
 	"fmt"
 	"net/http"
@@ -10,10 +11,13 @@ import (
 )
 
 type Handler struct {
+	middlewares *middleware.Middlewares
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(middlewares *middleware.Middlewares) *Handler {
+	return &Handler{
+		middlewares: middlewares,
+	}
 }
 
 func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {

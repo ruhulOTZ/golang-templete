@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var configurations Config
+var configurations *Config
 
 type Config struct {
 	Version      string
@@ -17,7 +17,7 @@ type Config struct {
 	JwtSecretKey string
 }
 
-func loadConfig() Config {
+func loadConfig() {
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
 		fmt.Println("Error loading .env file:", err)
@@ -45,16 +45,17 @@ func loadConfig() Config {
 		os.Exit(1)
 	}
 
-	configurations = Config{
+	configurations = &Config{
 		Version:      version,
 		ServiceName:  serviceName,
 		HttpPort:     int(port),
 		JwtSecretKey: jwtSecretKey,
 	}
-
-	return configurations
 }
 
-func GetConfig() Config {
-	return loadConfig()
+func GetConfig() *Config {
+	if configurations == nil {
+		loadConfig()
+	}
+	return configurations
 }

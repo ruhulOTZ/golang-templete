@@ -4,16 +4,20 @@ import (
 	"encoding/json"
 	"expenseTracker/config"
 	"expenseTracker/database"
+	"expenseTracker/rest/middleware"
 	"expenseTracker/utils"
 	"fmt"
 	"net/http"
 )
 
 type Handler struct {
+	middlewares *middleware.Middlewares
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(middlewares *middleware.Middlewares) *Handler {
+	return &Handler{
+		middlewares: middlewares,
+	}
 }
 
 func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
